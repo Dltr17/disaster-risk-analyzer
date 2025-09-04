@@ -2,6 +2,7 @@ import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShieldOutlinedIcon from '@mui/icons-material/ShieldOutlined';
 import { useDispatch } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { toggleSideNav } from '../../store/slices/uiSlice';
 
 const Header = () => {
@@ -23,10 +24,21 @@ const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <ShieldOutlinedIcon sx={{ mr: 1.5, fontSize: '2rem' }} />
-        <Typography variant="h6" noWrap component="div">
-          Risk Analyzer
-        </Typography>
+
+        <NavLink
+          to="/"
+          style={{
+            textDecoration: 'none',
+            color: 'inherit',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          <ShieldOutlinedIcon sx={{ mr: 1.5, fontSize: '2rem' }} />
+          <Typography variant="h6" noWrap>
+            Risk Analyzer
+          </Typography>
+        </NavLink>
       </Toolbar>
     </AppBar>
   );
