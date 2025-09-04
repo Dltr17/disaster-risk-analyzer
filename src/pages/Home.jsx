@@ -1,6 +1,6 @@
 import { Box, Button, Container, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import SecurityIcon from '@mui/icons-material/Security';
+import GppGoodIcon from '@mui/icons-material/GppGood'; // Un icono que sugiere protección y análisis
 
 const Home = () => {
   return (
@@ -18,14 +18,14 @@ const Home = () => {
       }}
     >
       <Container maxWidth="md">
-        <SecurityIcon sx={{ fontSize: 120, mb: 2, color: '#64b5f6' }} />
+        <GppGoodIcon sx={{ fontSize: 120, mb: 2, color: '#64b5f6' }} />
         <Typography
           variant="h2"
           component="h1"
           gutterBottom
           sx={{ fontWeight: 'bold', textShadow: '2px 2px 4px rgba(0,0,0,0.3)' }}
         >
-          Vulnerability Assessment Tool
+          Analizador de Riesgos de Desastre
         </Typography>
         <Typography
           variant="h5"
@@ -33,7 +33,7 @@ const Home = () => {
           gutterBottom
           sx={{ mb: 4, fontStyle: 'italic', color: '#e0e0e0' }}
         >
-          Identifica, analiza y reporta vulnerabilidades con una interfaz moderna y eficiente.
+          Identifica, analiza y reporta vulnerabilidades para construir comunidades más resilientes.
         </Typography>
         <Button
           variant="contained"
@@ -52,7 +52,7 @@ const Home = () => {
             },
           }}
         >
-          Comenzar
+          Comenzar Análisis
         </Button>
       </Container>
     </Box>
