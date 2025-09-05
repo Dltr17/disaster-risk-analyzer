@@ -5,6 +5,7 @@ import Layout from '../components/layout/Layout';
 import Vulnerabilidad from '../pages/views/Vulnerabilidad';
 import Amenazas from '../pages/views/Amenazas';
 import Reporte from '../pages/views/Reporte';
+import Contexto from '../pages/views/Contexto';
 
 const AppRouter = () => {
   return (
@@ -18,6 +19,7 @@ const AppRouter = () => {
         <Route path="vulnerabilidad" element={<Vulnerabilidad />} />
         <Route path="amenazas" element={<Amenazas />} />
         <Route path="reporte" element={<Reporte />} />
+        <Route path="contexto" element={<Contexto />} />
       </Route>
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>

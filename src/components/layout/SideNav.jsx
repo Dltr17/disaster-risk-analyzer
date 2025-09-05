@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { toggleSideNav } from '../../store/slices/uiSlice';
 
+import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
 import PeopleOutlineIcon from '@mui/icons-material/PeopleOutline';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
@@ -19,6 +20,11 @@ import AssessmentOutlinedIcon from '@mui/icons-material/AssessmentOutlined';
 const drawerWidth = 240;
 
 const navItems = [
+  {
+    text: 'Contexto',
+    path: '/work/contexto',
+    icon: <ApartmentOutlinedIcon />,
+  },
   {
     text: 'Vulnerabilidad',
     path: '/work/vulnerabilidad',
@@ -51,7 +57,7 @@ const SideNav = () => {
         <List>
           {navItems.map((item) => (
             <ListItem key={item.text} disablePadding>
-              <ListItemButton component={NavLink} to={item.path}>
+              <ListItemButton component={NavLink} to={item.path} >
                 <ListItemIcon>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
               </ListItemButton>
