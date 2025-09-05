@@ -24,7 +24,7 @@ const Layout = ({ children }) => {
     <Box sx={{ display: 'flex' }}>
       <Header open={isSideNavOpen} onSideNavToggle={handleSideNavToggle} />
       <SideNav />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, px: 3, pt: 3, pb: 3 }}>
         <DrawerHeader />
         {children}
       </Box>

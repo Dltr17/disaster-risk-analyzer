@@ -15,7 +15,7 @@ const AppRouter = () => {
         path="/work" 
         element={<Layout><Work /></Layout>}
       >
-        <Route index element={<Vulnerabilidad />} />
+        <Route index element={<Reporte />} />
         <Route path="vulnerabilidad" element={<Vulnerabilidad />} />
         <Route path="amenazas" element={<Amenazas />} />
         <Route path="reporte" element={<Reporte />} />

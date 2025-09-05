@@ -1,195 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useForm, Controller } from 'react-hook-form';
 import {
   Box,
-  Button,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Slider,
+  Grid,
+  Stack,
+  Divider,
 } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import {
-  addVulnerability,
-  updateVulnerability,
-  deleteVulnerability,
-} from '../../store/slices/vulnerabilitySlice';
-import { formFields, vulnerabilityTypes } from '../../data/vulnerabilidadFormFields.js';
+import { setVulnerabilityScore, resetScores } from '../../store/slices/vulnerabilitySlice';
+import { getSummary } from '../../helpers/vulnerabilityCalculators';
+import { vulnerabilityMatrix } from '../../data/vulnerabilidadFormFields';
+
+// Import the newly created components
+import VulnerabilitySummary from '../../components/vulnerability/VulnerabilitySummary';
+import VulnerabilityChecklist from '../../components/vulnerability/VulnerabilityChecklist';
 
 const Vulnerabilidad = () => {
   const dispatch = useDispatch();
-  const { vulnerabilities } = useSelector((state) => state.vulnerability);
-  const [open, setOpen] = useState(false);
-  const [currentVulnerability, setCurrentVulnerability] = useState(null);
 
-  const { control, handleSubmit, reset } = useForm();
+  // Safely select scores, defaulting to an empty object if the state is not ready.
+  const scores = useSelector((state) => state.vulnerability?.scores) || {};
 
-  const handleClickOpen = (vulnerability = null) => {
-    setCurrentVulnerability(vulnerability);
-    // Reset form with vulnerability data or default values
-    reset(vulnerability || { nombre: '', descripcion: '', tipo: '', calificacion: 1 });
-    setOpen(true);
+  const handleScoreChange = (id, score) => {
+    dispatch(setVulnerabilityScore({ id, score }));
   };
 
-  const handleClose = () => {
-    setOpen(false);
-    setCurrentVulnerability(null);
-    reset(); // Clear the form on close
+  const handleReset = () => {
+    // In a real app, you might want a confirmation dialog here.
+    dispatch(resetScores());
   };
 
-  const onSubmit = (data) => {
-    if (currentVulnerability) {
-      dispatch(
-        updateVulnerability({
-          ...data,
-          id_vulnerabilidad: currentVulnerability.id_vulnerabilidad,
-        })
-      );
-    } else {
-      dispatch(addVulnerability(data));
-    }
-    handleClose();
-  };
-
-  const handleDelete = (id) => {
-    dispatch(deleteVulnerability({ id_vulnerabilidad: id }));
-  };
-  
-  // Dynamically renders the correct form field based on its type
-  const renderFormField = (field) => {
-    return (
-      <Box key={field.name} sx={{ mb: 2 }}>
-        <Controller
-          name={field.name}
-          control={control}
-          defaultValue={field.defaultValue || (field.type === 'select' ? '' : undefined)}
-          render={({ field: controllerField }) => {
-            switch (field.type) {
-              case 'select':
-                return (
-                  <FormControl fullWidth>
-                    <InputLabel>{field.label}</InputLabel>
-                    <Select {...controllerField} label={field.label}>
-                      {field.options.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                );
-              case 'slider':
-                return (
-                  <>
-                    <Typography gutterBottom>{field.label}</Typography>
-                    <Slider
-                      {...controllerField}
-                      aria-labelledby="input-slider"
-                      valueLabelDisplay="auto"
-                      step={field.step}
-                      marks
-                      min={field.min}
-                      max={field.max}
-                    />
-                  </>
-                );
-              default: // 'text' or 'textarea'
-                return (
-                  <TextField
-                    {...controllerField}
-                    fullWidth
-                    label={field.label}
-                    multiline={field.multiline || false}
-                    rows={field.rows || 1}
-                    variant="outlined"
-                  />
-                );
-            }
-          }}
-        />
-      </Box>
-    );
-  };
+  // useMemo will recalculate the summary only when the scores object changes.
+  const summary = useMemo(
+    () => getSummary(vulnerabilityMatrix, scores),
+    [scores]
+  );
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Typography variant="h4" gutterBottom sx={{ mb: 3 }}>
-          Gestión de Vulnerabilidades
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handleClickOpen()}
-          sx={{ mb: 3 }}
+      <Box sx={{ px: { xs: 2, md: 3 }, pt: { xs: 2, md: 3 } }}>
+        <Typography
+          variant="h4"
+          gutterBottom
+          sx={{ mb: 3, fontWeight: 'bold', color: '#1A2027' }}
         >
-          Añadir Vulnerabilidad
-        </Button>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Nombre</TableCell>
-                <TableCell>Tipo</TableCell>
-                <TableCell>Calificación</TableCell>
-                <TableCell align="right">Acciones</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {vulnerabilities.map((vul) => (
-                <TableRow key={vul.id_vulnerabilidad}>
-                  <TableCell>{vul.nombre}</TableCell>
-                  <TableCell>{vul.tipo}</TableCell>
-                  <TableCell>{vul.calificacion}</TableCell>
-                  <TableCell align="right">
-                    <IconButton onClick={() => handleClickOpen(vul)}>
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton onClick={() => handleDelete(vul.id_vulnerabilidad)}>
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+          Análisis de Vulnerabilidad
+        </Typography>
 
-        <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
-          <DialogTitle>
-            {currentVulnerability ? 'Editar Vulnerabilidad' : 'Añadir Vulnerabilidad'}
-          </DialogTitle>
-          <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <DialogContent>
-                {formFields.map(renderFormField)}
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleClose} type="button">Cancelar</Button>
-              <Button type="submit" variant="contained">
-                {currentVulnerability ? 'Actualizar' : 'Guardar'}
-              </Button>
-            </DialogActions>
-          </form>
-        </Dialog>
-      </Paper>
-    </Box>
+      <Stack 
+      spacing={2}
+      divider={<Divider orientation="horizontal" flexItem />}
+      >
+        
+       <VulnerabilitySummary summary={summary} onReset={handleReset} />
+
+       <VulnerabilityChecklist
+          scores={scores}
+          onScoreChange={handleScoreChange}
+        />
+      </Stack>
+      </Box>
   );
 };
 
