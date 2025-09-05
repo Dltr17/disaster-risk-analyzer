@@ -49,6 +49,7 @@ const Vulnerabilidad = () => {
       <Stack 
       spacing={2}
       divider={<Divider orientation="horizontal" flexItem />}
+      direction="column"
       >
         
        <VulnerabilitySummary summary={summary} onReset={handleReset} />
